@@ -1,0 +1,9 @@
+{
+    "name": "didymo/manage_events",
+    "type": "drupal-module",
+    "description": "Drupal Service Clubs is a flexible solution for the management of Service CLubs. This module manages events in the system.",
+    "homepage": "https://github.com/didymo/manage_events",
+    "license": "GPL-2.0+",
+    "require": { },
+    "minimum-stability": "dev"
+}

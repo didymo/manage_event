@@ -1,0 +1,33 @@
+<?php
+
+function manage_event_schema() {
+    $schema['email_confirmation'] = array(
+        'description' => 'Stores information regarding email confirmation.',
+        'fields' => array(
+            'id' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+            ),
+            'uid' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => "User's ID",
+            ),
+            'eid' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => 'Event ID.',
+            ),
+            'type' => array(
+                'type' => 'int',
+                'not null' => TRUE,
+                'default' => 0,
+                'description' => "Email type",
+            )
+        ),
+        'primary key' => array('id'),
+    );
+    return $schema;
+}

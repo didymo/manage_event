@@ -1,0 +1,98 @@
+# Route name can be used in several place (links, redirects, local actions etc.)
+entity.content_entity_manage_event.canonical:
+  path: '/content_entity_manage_event/{content_entity_manage_event}'
+  defaults:
+  # Calls the view controller, defined in the annotation of the contact entity
+    _entity_view: 'content_entity_manage_event'
+    _title: 'Event Content'
+  requirements:
+  # Calls the access controller of the entity, $operation 'view'
+    _entity_access: 'content_entity_manage_event.view'
+
+entity.content_entity_manage_event.collection:
+  path: '/content_entity_manage_event/list'
+  defaults:
+  # Calls the list controller, defined in the annotation of the contact entity.
+    _entity_list: 'content_entity_manage_event'
+    _title: 'Event List'
+  requirements:
+  # Checks for permission directly.
+    _permission: 'view event entity'
+
+entity.manage_event.add_form:
+  path: '/content_entity_manage_event/add'
+  defaults:
+  # Calls the form.add controller, defined in the contact entity.
+    _entity_form: content_entity_manage_event.add
+    _title: 'Add Event'
+  requirements:
+    _entity_create_access: 'content_entity_manage_event'
+
+entity.content_entity_manage_event.edit_form:
+  path: '/content_entity_manage_event/{content_entity_manage_event}/edit'
+  defaults:
+  # Calls the form.edit controller, defined in the event entity.
+    _entity_form: content_entity_manage_event.edit
+    _title: 'Edit Event'
+  requirements:
+    _entity_access: 'content_entity_manage_event.edit'
+
+entity.content_entity_manage_event.delete_form:
+  path: '/inventory/{content_entity_manage_event}/delete'
+  defaults:
+    # Calls the form.delete controller, defined in the contact entity.
+    _entity_form: content_entity_manage_event.delete
+    _title: 'Delete Event'
+  requirements:
+    _entity_access: 'content_entity_manage_event.delete'
+
+manage_event.event_settings:
+  path: 'admin/structure/content_entity_manage_event_settings'
+  defaults:
+    _form: '\Drupal\manage_event\Form\EventSettingsForm'
+    _title: 'Event Settings'
+  requirements:
+    _permission: 'administer contact entity'
+
+manage_event.email.confirmation.listing:
+  path: 'confirmation/listing/{node}/{type}'
+  defaults:
+    _title: 'Confirmation List'
+    _controller: '\Drupal\manage_event\Controller\EmailConfirmationController::entryList'
+  requirements:
+    _permission: 'access content'
+
+manage_event.one_time_login:
+  path: '/register/{uid}/{timestamp}/{hash}/{eid}/{type}'
+  defaults:
+     _title: 'One Time Login'
+     _controller: '\Drupal\manage_event\Controller\OneTimeLoginController::OneTimeLogin'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE
+
+manage_event.one_time_login.getForm:
+  path: '/testing/onetimelogin/test/{uid}/{eid}/{type}'
+  defaults:
+    _title: 'Testing'
+    _controller: '\Drupal\manage_event\Controller\OneTimeLoginController::getResetPassForm'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE
+
+manage_event.one_time_login.login:
+  path: '/testing/onetimelogin/test/{uid}/{timestamp}/{hash}/login/{eid}/{type}'
+  defaults:
+    _controller: '\Drupal\manage_event\Controller\OneTimeLoginController::resetPassLogin'
+    _title: 'Reset password'
+  requirements:
+    _user_is_logged_in: 'FALSE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE
+
+
