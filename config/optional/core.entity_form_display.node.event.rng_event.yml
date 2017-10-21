@@ -1,0 +1,94 @@
+uuid: b4a5af7f-15cb-49ae-9afa-219dbce32161
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.node.rng_event
+    - field.field.node.event.rng_capacity
+    - field.field.node.event.rng_registrants_duplicate
+    - field.field.node.event.rng_registrants_maximum
+    - field.field.node.event.rng_registrants_minimum
+    - field.field.node.event.rng_registration_groups
+    - field.field.node.event.rng_registration_type
+    - field.field.node.event.rng_reply_to
+    - field.field.node.event.rng_status
+    - node.type.event
+  module:
+    - rng
+    - unlimited_number
+id: node.event.rng_event
+targetEntityType: node
+bundle: event
+mode: rng_event
+content:
+  rng_capacity:
+    type: unlimited_number
+    weight: 2
+    settings:
+      value_unlimited: 0
+      label_unlimited: Unlimited
+      label_number: Limited
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  rng_registrants_duplicate:
+    type: boolean_checkbox
+    weight: 1
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    region: content
+  rng_registrants_maximum:
+    type: unlimited_number
+    settings:
+      value_unlimited: -1
+      label_unlimited: 'No maximum'
+      label_number: Maximum
+      placeholder: ''
+    weight: 7
+    third_party_settings: {  }
+    region: content
+  rng_registrants_minimum:
+    type: unlimited_number
+    settings:
+      value_unlimited: 0
+      label_unlimited: 'No registrants required'
+      label_number: Minimum
+      placeholder: ''
+    weight: 6
+    third_party_settings: {  }
+    region: content
+  rng_registration_groups:
+    type: rng_registration_group
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  rng_registration_type:
+    type: rng_registration_type
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  rng_reply_to:
+    type: email_default
+    settings:
+      placeholder: 'Leave empty to use site default.'
+      size: 60
+    weight: 3
+    third_party_settings: {  }
+    region: content
+  rng_status:
+    type: boolean_checkbox
+    weight: 0
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  path: true
+  promote: true
+  sticky: true
+  title: true
+  uid: true

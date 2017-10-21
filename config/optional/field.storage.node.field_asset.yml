@@ -1,0 +1,20 @@
+uuid: 77239689-4e4f-4859-9311-c9f098882366
+langcode: en
+status: true
+dependencies:
+  module:
+    - assetmanage
+    - node
+id: node.field_asset
+field_name: field_asset
+entity_type: node
+type: entity_reference
+settings:
+  target_type: asset
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

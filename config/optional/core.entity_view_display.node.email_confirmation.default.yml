@@ -1,0 +1,30 @@
+uuid: 21446117-833b-489e-bf61-a185fd09c6cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.email_confirmation.body
+    - field.field.node.email_confirmation.field_email_confirmation_type
+    - field.field.node.email_confirmation.field_reference
+    - node.type.email_confirmation
+  module:
+    - text
+    - user
+id: node.email_confirmation.default
+targetEntityType: node
+bundle: email_confirmation
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_email_confirmation_type: true
+  field_reference: true
+  flag_email_node: true
+  flag_subscribe_node: true
+  links: true

@@ -1,0 +1,32 @@
+uuid: 1db3be22-5094-47cf-a2d0-458be616440b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.email_confirmation.body
+    - field.field.node.email_confirmation.field_email_confirmation_type
+    - field.field.node.email_confirmation.field_reference
+    - node.type.email_confirmation
+  module:
+    - text
+    - user
+id: node.email_confirmation.teaser
+targetEntityType: node
+bundle: email_confirmation
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 0
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_email_confirmation_type: true
+  field_reference: true
+  flag_email_node: true
+  flag_subscribe_node: true
+  links: true

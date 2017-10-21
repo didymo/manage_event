@@ -1,0 +1,22 @@
+uuid: 3f70e756-a615-4509-babd-5cc0be0bd563
+langcode: en
+status: true
+dependencies:
+  module:
+    - dynamic_entity_reference
+    - node
+id: node.field_reference_general
+field_name: field_reference_general
+entity_type: node
+type: dynamic_entity_reference
+settings:
+  exclude_entity_types: false
+  entity_type_ids:
+    node: node
+module: dynamic_entity_reference
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
