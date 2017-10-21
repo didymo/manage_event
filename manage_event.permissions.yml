@@ -1,0 +1,5 @@
+view calendar overview:
+  title: 'Ability to view the Calendar overview for Events'
+
+create events:
+  title: 'Permission to create events'

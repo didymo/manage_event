@@ -46,6 +46,34 @@ entity.content_entity_manage_event.delete_form:
   requirements:
     _entity_access: 'content_entity_manage_event.delete'
 
+manage_event.gp.calendarMonth:
+  path: '/event_general_public/month'
+  defaults:
+    _title: 'General Public only'
+  requirements:
+    _permission: 'view calendar overview'
+
+manage_event.mf.calendarMonth:
+  path: '/event_member_friend/month'
+  defaults:
+    _title: 'Members & Friends only'
+  requirements:
+    _permission: 'view calendar overview'
+
+manage_event.calendarMonth:
+  path: '/event_overview/month'
+  defaults:
+    _title: 'Calendar Overview'
+  requirements:
+    _permission: 'view calendar overview'
+
+manage_event.create_event:
+  path: '/content_entity_manage_event/add'
+  defaults:
+    _title: 'Create Event'
+  requirements:
+    _permission: 'create events'
+
 manage_event.event_settings:
   path: 'admin/structure/content_entity_manage_event_settings'
   defaults:
