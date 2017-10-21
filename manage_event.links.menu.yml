@@ -10,3 +10,10 @@ content_entity_manage_event.admin.structure.settings:
   description: 'Configure Event entity'
   route_name:  manage_event.event_settings
   parent: system.admin_structure
+
+create_event:
+  title: 'Create Event'
+  path: '/content_entity_manage_event/add'
+  parent: main
+  menu_name: main
+  weight: -10
