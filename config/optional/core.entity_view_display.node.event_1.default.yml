@@ -1,0 +1,105 @@
+uuid: f262e03d-5795-433d-baad-5c536befee79
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.event_1.field_delete_rule_id
+    - field.field.node.event_1.field_description
+    - field.field.node.event_1.field_event_date
+    - field.field.node.event_1.field_event_date_end
+    - field.field.node.event_1.field_image
+    - field.field.node.event_1.field_message
+    - field.field.node.event_1.field_reference
+    - field.field.node.event_1.field_register_link
+    - field.field.node.event_1.field_registrant_count
+    - field.field.node.event_1.field_update_rule_id
+    - field.field.node.event_1.field_venue
+    - field.field.node.event_1.field_view_registration_list
+    - field.field.node.event_1.rng_capacity
+    - field.field.node.event_1.rng_registrants_duplicate
+    - field.field.node.event_1.rng_registrants_maximum
+    - field.field.node.event_1.rng_registrants_minimum
+    - field.field.node.event_1.rng_registration_groups
+    - field.field.node.event_1.rng_registration_type
+    - field.field.node.event_1.rng_reply_to
+    - field.field.node.event_1.rng_status
+    - node.type.event_1
+  module:
+    - datetime
+    - link
+    - user
+id: node.event_1.default
+targetEntityType: node
+bundle: event_1
+mode: default
+content:
+  field_event_date:
+    type: datetime_default
+    weight: 0
+    region: content
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: long
+    third_party_settings: {  }
+  field_event_date_end:
+    type: datetime_default
+    weight: 1
+    region: content
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: long
+    third_party_settings: {  }
+  field_message:
+    weight: 2
+    label: visually_hidden
+    settings:
+      trim_length: 80
+      target: _blank
+      url_only: false
+      url_plain: false
+      rel: '0'
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_registrant_count:
+    weight: 3
+    label: inline
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_view_registration_list:
+    weight: 4
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+hidden:
+  field_delete_rule_id: true
+  field_description: true
+  field_image: true
+  field_reference: true
+  field_register_link: true
+  field_update_rule_id: true
+  field_venue: true
+  flag_email_node: true
+  flag_subscribe_node: true
+  links: true
+  rng_capacity: true
+  rng_registrants_duplicate: true
+  rng_registrants_maximum: true
+  rng_registrants_minimum: true
+  rng_registration_groups: true
+  rng_registration_type: true
+  rng_reply_to: true
+  rng_status: true

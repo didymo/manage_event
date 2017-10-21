@@ -1,0 +1,22 @@
+uuid: b39345ed-00c3-4d7b-9e79-7b13926b2398
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - bt_subtheme
+_core:
+  default_config_hash: 8I8iACSa0sKO3k3jlvUG1ge52rfcKX7USJAQYnzuBgg
+id: bt_subtheme_help
+theme: bt_subtheme
+region: content
+weight: -8
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

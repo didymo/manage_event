@@ -1,0 +1,20 @@
+uuid: 18cb3e33-8f00-4a61-9442-7ae079791946
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+id: anonymous
+label: 'Anonymous user'
+weight: 0
+is_admin: false
+permissions:
+  - 'access cart'
+  - 'access checkout'
+  - 'access comments'
+  - 'access content'
+  - 'access site-wide contact form'
+  - 'create test_contact_type rng_contact'
+  - 'search content'
+  - 'subscribe to newsletters'
+  - 'use text format restricted_html'

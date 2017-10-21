@@ -1,0 +1,337 @@
+uuid: 4a0bd521-7fda-43c6-8d24-ed34efcda3f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.event_overview.field_asset
+    - field.field.node.event_overview.field_description
+    - field.field.node.event_overview.field_event_date_end_general
+    - field.field.node.event_overview.field_event_date_end_member
+    - field.field.node.event_overview.field_event_date_general
+    - field.field.node.event_overview.field_event_date_member
+    - field.field.node.event_overview.field_image
+    - field.field.node.event_overview.field_reference_delete
+    - field.field.node.event_overview.field_reference_general
+    - field.field.node.event_overview.field_reference_member
+    - field.field.node.event_overview.field_reference_update
+    - field.field.node.event_overview.field_venue
+    - node.type.event_overview
+  module:
+    - address
+    - address_map_link
+    - ds
+    - dynamic_entity_reference
+    - image
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: layout_twocol_bricks
+      library: layout_discovery/twocol_bricks
+      disable_css: false
+      entity_classes: all_classes
+      settings: {  }
+    regions:
+      first_above:
+        - field_image
+      second_above:
+        - field_venue
+        - field_asset
+      first_below:
+        - field_reference_member
+      second_below:
+        - field_reference_general
+      bottom:
+        - field_description
+id: node.event_overview.full
+targetEntityType: node
+bundle: event_overview
+mode: full
+content:
+  field_asset:
+    type: entity_reference_label
+    weight: 2
+    region: second_above
+    label: above
+    settings:
+      link: true
+    third_party_settings:
+      ds:
+        ds_limit: ''
+  field_description:
+    type: text_default
+    weight: 5
+    region: bottom
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  field_image:
+    type: image
+    weight: 0
+    region: first_above
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+  field_reference_general:
+    type: dynamic_entity_reference_entity_view
+    weight: 4
+    region: second_below
+    label: hidden
+    settings:
+      comment:
+        view_mode: default
+        link: false
+      rng_contact:
+        view_mode: default
+        link: false
+      contact_message:
+        view_mode: default
+        link: false
+      node:
+        view_mode: default
+        link: false
+      commerce_promotion_coupon:
+        view_mode: default
+        link: false
+      block_content:
+        view_mode: default
+        link: false
+      menu_link_content:
+        view_mode: default
+        link: false
+      courier_email:
+        view_mode: default
+        link: false
+      rng_rule:
+        view_mode: default
+        link: false
+      content_entity_manage_event:
+        view_mode: default
+        link: false
+      rng_rule_component:
+        view_mode: default
+        link: false
+      file:
+        view_mode: default
+        link: false
+      flagging:
+        view_mode: default
+        link: false
+      courier_template_collection:
+        view_mode: default
+        link: false
+      message:
+        view_mode: default
+        link: false
+      courier_message_queue_item:
+        view_mode: default
+        link: false
+      commerce_order:
+        view_mode: default
+        link: false
+      commerce_order_item:
+        view_mode: default
+        link: false
+      commerce_payment:
+        view_mode: default
+        link: false
+      commerce_payment_method:
+        view_mode: default
+        link: false
+      private_profile:
+        view_mode: default
+        link: false
+      commerce_product:
+        view_mode: default
+        link: false
+      commerce_product_attribute_value:
+        view_mode: default
+        link: false
+      commerce_product_variation:
+        view_mode: default
+        link: false
+      profile:
+        view_mode: default
+        link: false
+      commerce_promotion:
+        view_mode: default
+        link: false
+      public_profile:
+        view_mode: default
+        link: false
+      registrant:
+        view_mode: default
+        link: false
+      registration:
+        view_mode: default
+        link: false
+      registration_group:
+        view_mode: default
+        link: false
+      rng_rule_scheduler:
+        view_mode: default
+        link: false
+      shortcut:
+        view_mode: default
+        link: false
+      commerce_store:
+        view_mode: default
+        link: false
+      taxonomy_term:
+        view_mode: default
+        link: false
+      user:
+        view_mode: default
+        link: false
+      vehicle:
+        view_mode: default
+        link: false
+      asset:
+        view_mode: default
+        link: false
+    third_party_settings: {  }
+  field_reference_member:
+    type: dynamic_entity_reference_entity_view
+    weight: 3
+    region: first_below
+    label: hidden
+    settings:
+      comment:
+        view_mode: default
+        link: false
+      rng_contact:
+        view_mode: default
+        link: false
+      contact_message:
+        view_mode: default
+        link: false
+      node:
+        view_mode: default
+        link: false
+      commerce_promotion_coupon:
+        view_mode: default
+        link: false
+      block_content:
+        view_mode: default
+        link: false
+      menu_link_content:
+        view_mode: default
+        link: false
+      courier_email:
+        view_mode: default
+        link: false
+      rng_rule:
+        view_mode: default
+        link: false
+      content_entity_manage_event:
+        view_mode: default
+        link: false
+      rng_rule_component:
+        view_mode: default
+        link: false
+      file:
+        view_mode: default
+        link: false
+      flagging:
+        view_mode: default
+        link: false
+      courier_template_collection:
+        view_mode: default
+        link: false
+      message:
+        view_mode: default
+        link: false
+      courier_message_queue_item:
+        view_mode: default
+        link: false
+      commerce_order:
+        view_mode: default
+        link: false
+      commerce_order_item:
+        view_mode: default
+        link: false
+      commerce_payment:
+        view_mode: default
+        link: false
+      commerce_payment_method:
+        view_mode: default
+        link: false
+      private_profile:
+        view_mode: default
+        link: false
+      commerce_product:
+        view_mode: default
+        link: false
+      commerce_product_attribute_value:
+        view_mode: default
+        link: false
+      commerce_product_variation:
+        view_mode: default
+        link: false
+      profile:
+        view_mode: default
+        link: false
+      commerce_promotion:
+        view_mode: default
+        link: false
+      public_profile:
+        view_mode: default
+        link: false
+      registrant:
+        view_mode: default
+        link: false
+      registration:
+        view_mode: default
+        link: false
+      registration_group:
+        view_mode: default
+        link: false
+      rng_rule_scheduler:
+        view_mode: default
+        link: false
+      shortcut:
+        view_mode: default
+        link: false
+      commerce_store:
+        view_mode: default
+        link: false
+      taxonomy_term:
+        view_mode: default
+        link: false
+      user:
+        view_mode: default
+        link: false
+      vehicle:
+        view_mode: default
+        link: false
+      asset:
+        view_mode: default
+        link: false
+    third_party_settings: {  }
+  field_venue:
+    type: address_plain
+    weight: 1
+    region: second_above
+    label: above
+    settings: {  }
+    third_party_settings:
+      address_map_link:
+        link_address: '1'
+        map_link_type: google_maps
+        map_link_position: after
+        map_link_text: 'View map'
+        map_link_new_window: 0
+hidden:
+  field_event_date_end_general: true
+  field_event_date_end_member: true
+  field_event_date_general: true
+  field_event_date_member: true
+  field_reference_delete: true
+  field_reference_update: true
+  flag_email_node: true
+  flag_subscribe_node: true
+  links: true

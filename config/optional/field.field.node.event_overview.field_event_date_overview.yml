@@ -1,0 +1,21 @@
+uuid: 47038c57-b87f-4001-a415-2a393e6e862c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_date_overview
+    - node.type.event_overview
+  module:
+    - datetime
+id: node.event_overview.field_event_date_overview
+field_name: field_event_date_overview
+entity_type: node
+bundle: event_overview
+label: 'Member and Friends'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

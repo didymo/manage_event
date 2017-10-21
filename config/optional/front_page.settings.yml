@@ -1,0 +1,14 @@
+enable: 1
+rid_anonymous:
+  enabled: '1'
+  weigth: '0'
+  path: /home-general-public
+rid_authenticated:
+  enabled: '1'
+  weigth: '0'
+  path: /home-members
+rid_administrator:
+  enabled: '1'
+  weigth: '-2'
+  path: /home-admin
+home_link_path: home

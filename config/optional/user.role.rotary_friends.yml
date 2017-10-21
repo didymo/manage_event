@@ -1,0 +1,10 @@
+uuid: e6c9d820-3e54-465b-9371-b1b571cdeaa8
+langcode: en
+status: true
+dependencies: {  }
+id: rotary_friends
+label: 'Rotary Friends'
+weight: 4
+is_admin: null
+permissions:
+  - 'add asset entities'

@@ -1,0 +1,21 @@
+uuid: 853ead6a-ec8c-41ed-a1a2-baefb3325431
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.rng_registration_groups
+    - node.type.event
+id: node.event.rng_registration_groups
+field_name: rng_registration_groups
+entity_type: node
+bundle: event
+label: 'Registration groups'
+description: 'New registrations will be added to these groups.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:registration_group'
+  handler_settings: {  }
+field_type: entity_reference

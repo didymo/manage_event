@@ -1,0 +1,14 @@
+uuid: 4198b3a7-5c40-43ef-803d-c8ca667d9e4b
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.rotary_friends
+  module:
+    - user
+id: user_add_role_action.rotary_friends
+label: 'Add the Rotary Friends role to the selected users'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: rotary_friends

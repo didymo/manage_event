@@ -1,0 +1,22 @@
+uuid: 2d45b3e8-2659-48e1-a444-f709b28f5011
+langcode: en
+status: false
+dependencies:
+  module:
+    - search
+  theme:
+    - bt_subtheme
+_core:
+  default_config_hash: za-39d5WDUg6XvbyqSnuVYEeq6QM4qKJxW8MnoAha5A
+id: bt_subtheme_search
+theme: bt_subtheme
+region: sidebar_first
+weight: -1
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+visibility: {  }

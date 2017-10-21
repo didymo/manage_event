@@ -1,0 +1,139 @@
+uuid: fdfc5f00-e232-4e28-8a06-299883d75526
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_reference_update
+    - node.type.email_confirmation
+    - node.type.event_overview
+  module:
+    - dynamic_entity_reference
+id: node.event_overview.field_reference_update
+field_name: field_reference_update
+entity_type: node
+bundle: event_overview
+label: 'Reference to update email notification'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  node:
+    handler: 'default:node'
+    handler_settings:
+      target_bundles:
+        email_confirmation: email_confirmation
+      sort:
+        field: _none
+      auto_create: false
+      auto_create_bundle: ''
+  asset:
+    handler: 'default:asset'
+    handler_settings: {  }
+  comment:
+    handler: 'default:comment'
+    handler_settings: {  }
+  rng_contact:
+    handler: 'default:rng_contact'
+    handler_settings: {  }
+  contact_message:
+    handler: 'default:contact_message'
+    handler_settings: {  }
+  commerce_promotion_coupon:
+    handler: 'default:commerce_promotion_coupon'
+    handler_settings: {  }
+  block_content:
+    handler: 'default:block_content'
+    handler_settings: {  }
+  menu_link_content:
+    handler: 'default:menu_link_content'
+    handler_settings: {  }
+  courier_email:
+    handler: 'default:courier_email'
+    handler_settings: {  }
+  rng_rule:
+    handler: 'default:rng_rule'
+    handler_settings: {  }
+  content_entity_manage_event:
+    handler: 'default:content_entity_manage_event'
+    handler_settings: {  }
+  rng_rule_component:
+    handler: 'default:rng_rule_component'
+    handler_settings: {  }
+  file:
+    handler: 'default:file'
+    handler_settings: {  }
+  flagging:
+    handler: 'default:flagging'
+    handler_settings: {  }
+  courier_template_collection:
+    handler: 'default:courier_template_collection'
+    handler_settings: {  }
+  message:
+    handler: 'default:message'
+    handler_settings: {  }
+  courier_message_queue_item:
+    handler: 'default:courier_message_queue_item'
+    handler_settings: {  }
+  commerce_order:
+    handler: 'default:commerce_order'
+    handler_settings: {  }
+  commerce_order_item:
+    handler: 'default:commerce_order_item'
+    handler_settings: {  }
+  commerce_payment:
+    handler: 'default:commerce_payment'
+    handler_settings: {  }
+  commerce_payment_method:
+    handler: 'default:commerce_payment_method'
+    handler_settings: {  }
+  private_profile:
+    handler: 'default:private_profile'
+    handler_settings: {  }
+  commerce_product:
+    handler: 'default:commerce_product'
+    handler_settings: {  }
+  commerce_product_attribute_value:
+    handler: 'default:commerce_product_attribute_value'
+    handler_settings: {  }
+  commerce_product_variation:
+    handler: 'default:commerce_product_variation'
+    handler_settings: {  }
+  profile:
+    handler: 'default:profile'
+    handler_settings: {  }
+  commerce_promotion:
+    handler: 'default:commerce_promotion'
+    handler_settings: {  }
+  public_profile:
+    handler: 'default:public_profile'
+    handler_settings: {  }
+  registrant:
+    handler: 'default:registrant'
+    handler_settings: {  }
+  registration:
+    handler: 'default:registration'
+    handler_settings: {  }
+  registration_group:
+    handler: 'default:registration_group'
+    handler_settings: {  }
+  rng_rule_scheduler:
+    handler: 'default:rng_rule_scheduler'
+    handler_settings: {  }
+  shortcut:
+    handler: 'default:shortcut'
+    handler_settings: {  }
+  commerce_store:
+    handler: 'default:commerce_store'
+    handler_settings: {  }
+  taxonomy_term:
+    handler: 'default:taxonomy_term'
+    handler_settings: {  }
+  user:
+    handler: 'default:user'
+    handler_settings: {  }
+  vehicle:
+    handler: 'default:vehicle'
+    handler_settings: {  }
+field_type: dynamic_entity_reference

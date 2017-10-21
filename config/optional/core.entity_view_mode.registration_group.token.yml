@@ -1,0 +1,10 @@
+uuid: a3c6b480-4ee8-467c-9cb1-94d3b8fa70a8
+langcode: en
+status: true
+dependencies:
+  module:
+    - rng
+id: registration_group.token
+label: Token
+targetEntityType: registration_group
+cache: true

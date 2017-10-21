@@ -1,0 +1,20 @@
+uuid: 0ce61a86-3bcd-42b4-ac92-eb68e8ace7b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.rng_contact.test_contact_type.field_email
+    - rng_contact.rng_contact_type.test_contact_type
+id: rng_contact.test_contact_type.default
+targetEntityType: rng_contact
+bundle: test_contact_type
+mode: default
+content:
+  field_email:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+hidden: {  }

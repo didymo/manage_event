@@ -1,0 +1,13 @@
+uuid: 9af15f3a-2a51-4ec5-bab8-13d273307ab6
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.email_node.flag
+label: 'Send email'
+type: node
+plugin: 'flag_action:email_node.flag'
+configuration:
+  flag_id: email_node
+  flag_action: flag
