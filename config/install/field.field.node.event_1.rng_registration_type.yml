@@ -1,0 +1,21 @@
+uuid: 7780eb63-b4ab-4626-8758-5ad7c48450aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.rng_registration_type
+    - node.type.event_1
+id: node.event_1.rng_registration_type
+field_name: rng_registration_type
+entity_type: node
+bundle: event_1
+label: 'Registration type'
+description: 'Select which registration types are valid for this event.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:registration_type'
+  handler_settings: {  }
+field_type: entity_reference

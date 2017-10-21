@@ -1,0 +1,20 @@
+uuid: da4183f1-5d08-436f-b3a1-e3f707a0b548
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - rng
+id: node.rng_registration_groups
+field_name: rng_registration_groups
+entity_type: node
+type: entity_reference
+settings:
+  target_type: registration_group
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

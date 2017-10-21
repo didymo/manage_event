@@ -1,0 +1,156 @@
+uuid: 755f67ce-7c89-4c5f-8ecf-a981c4f573aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.event_overview.field_asset
+    - field.field.node.event_overview.field_description
+    - field.field.node.event_overview.field_event_date_end_general
+    - field.field.node.event_overview.field_event_date_end_member
+    - field.field.node.event_overview.field_event_date_general
+    - field.field.node.event_overview.field_event_date_member
+    - field.field.node.event_overview.field_event_date_overview
+    - field.field.node.event_overview.field_image
+    - field.field.node.event_overview.field_reference_delete
+    - field.field.node.event_overview.field_reference_general
+    - field.field.node.event_overview.field_reference_member
+    - field.field.node.event_overview.field_reference_update
+    - field.field.node.event_overview.field_venue
+    - image.style.teaser
+    - node.type.event_overview
+  module:
+    - address
+    - address_map_link
+    - datetime
+    - ds
+    - image
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: ds_3col_stacked_fluid
+      library: ds/ds_3col_stacked_fluid
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        wrappers:
+          header: div
+          left: div
+          middle: div
+          right: div
+          footer: div
+        outer_wrapper: div
+        attributes: ''
+        link_attribute: ''
+        link_custom: ''
+        classes:
+          layout_class: {  }
+    regions:
+      header:
+        - node_title
+        - flag_subscribe_node
+        - flag_email_node
+      left:
+        - field_image
+      middle:
+        - field_event_date_overview
+        - field_event_date_general
+        - field_venue
+        - field_description
+      right:
+        - node_link
+    fields:
+      node_link:
+        plugin_id: node_link
+        weight: 8
+        label: hidden
+        formatter: default
+        settings:
+          'link text': 'View event'
+          'link class': ''
+          wrapper: ''
+          class: ''
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+        settings:
+          link: true
+          wrapper: h2
+          class: ''
+id: node.event_overview.teaser
+targetEntityType: node
+bundle: event_overview
+mode: teaser
+content:
+  field_description:
+    type: text_trimmed
+    weight: 7
+    region: middle
+    label: above
+    settings:
+      trim_length: 135
+    third_party_settings: {  }
+  field_event_date_general:
+    type: datetime_default
+    weight: 5
+    region: middle
+    label: above
+    settings:
+      timezone_override: Australia/Sydney
+      format_type: long
+    third_party_settings: {  }
+  field_event_date_overview:
+    type: datetime_default
+    weight: 4
+    region: middle
+    label: above
+    settings:
+      timezone_override: Australia/Sydney
+      format_type: long
+    third_party_settings: {  }
+  field_image:
+    type: image
+    weight: 3
+    region: left
+    label: hidden
+    settings:
+      image_style: teaser
+      image_link: content
+    third_party_settings: {  }
+  field_venue:
+    type: address_plain
+    weight: 6
+    region: middle
+    label: above
+    settings: {  }
+    third_party_settings:
+      address_map_link:
+        link_address: '1'
+        map_link_type: google_maps
+        map_link_position: address
+        map_link_text: 'View map'
+        map_link_new_window: '1'
+  flag_email_node:
+    weight: 2
+    region: header
+    settings: {  }
+    third_party_settings: {  }
+  flag_subscribe_node:
+    weight: 1
+    region: header
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_asset: true
+  field_event_date_end_general: true
+  field_event_date_end_member: true
+  field_event_date_member: true
+  field_reference_delete: true
+  field_reference_general: true
+  field_reference_member: true
+  field_reference_update: true
+  links: true

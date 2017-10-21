@@ -1,0 +1,21 @@
+uuid: a5f18b6e-7cca-4fbc-804f-affcaeae7075
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_date_general
+    - node.type.event_overview
+  module:
+    - datetime
+id: node.event_overview.field_event_date_general
+field_name: field_event_date_general
+entity_type: node
+bundle: event_overview
+label: 'General Public'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

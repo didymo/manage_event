@@ -1,0 +1,13 @@
+uuid: c4ba9b99-ce47-4291-b615-624af48ef570
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.subscribe_term.flag
+label: Subscribe
+type: taxonomy_term
+plugin: 'flag_action:subscribe_term.flag'
+configuration:
+  flag_id: subscribe_term
+  flag_action: flag

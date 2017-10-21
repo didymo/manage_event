@@ -1,0 +1,25 @@
+uuid: d03ef03d-df29-450b-8e1e-6d2f8d14bc44
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_asset
+    - node.type.event_overview
+id: node.event_overview.field_asset
+field_name: field_asset
+entity_type: node
+bundle: event_overview
+label: Asset
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:asset'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

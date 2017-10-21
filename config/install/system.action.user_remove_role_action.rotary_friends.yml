@@ -1,0 +1,14 @@
+uuid: 4269ec14-e806-45b8-bd42-b39a84cfbe87
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.rotary_friends
+  module:
+    - user
+id: user_remove_role_action.rotary_friends
+label: 'Remove the Rotary Friends role from the selected users'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: rotary_friends

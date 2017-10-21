@@ -1,0 +1,11 @@
+transport: smtp
+smtp_host: smtp.gmail.com
+smtp_port: 465
+smtp_encryption: ssl
+smtp_username: hellorotaract@gmail.com
+smtp_password: rotaractadministrator
+sendmail_path: /usr/sbin/sendmail
+sendmail_mode: bs
+spool_directory: ''
+_core:
+  default_config_hash: 0SeYZshzgoabDrbz-junYqeQOQ9BypPv2gaFcnqKy0M

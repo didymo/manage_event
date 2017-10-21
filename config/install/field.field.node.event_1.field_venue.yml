@@ -1,0 +1,49 @@
+uuid: d2607936-5590-4645-b3db-b0fbd4cdab62
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_venue
+    - node.type.event_1
+  module:
+    - address
+id: node.event_1.field_venue
+field_name: field_venue
+entity_type: node
+bundle: event_1
+label: Venue
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    country_code: AU
+    langcode: null
+    administrative_area: ''
+    locality: ''
+    dependent_locality: ''
+    postal_code: ''
+    sorting_code: ''
+    address_line1: ''
+    address_line2: ''
+    organization: ''
+    given_name: ''
+    additional_name: ''
+    family_name: ''
+default_value_callback: ''
+settings:
+  available_countries: {  }
+  fields:
+    locality: locality
+    postalCode: postalCode
+    sortingCode: sortingCode
+    addressLine1: addressLine1
+    addressLine2: addressLine2
+    administrativeArea: '0'
+    dependentLocality: '0'
+    organization: '0'
+    givenName: '0'
+    additionalName: '0'
+    familyName: '0'
+  langcode_override: ''
+field_type: address

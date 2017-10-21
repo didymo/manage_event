@@ -1,0 +1,41 @@
+uuid: e7f1c2ac-e5bd-403b-b256-c377152bb638
+langcode: en
+status: true
+dependencies: {  }
+id: send_mail
+label: 'send mail'
+events:
+  -
+    event_name: 'rules_entity_update:content_entity_manage_event'
+description: ''
+tags:
+  - ''
+config_version: '3'
+expression:
+  id: rules_rule
+  uuid: f3512d90-40ea-4d55-aa61-879b1bd1e340
+  conditions:
+    id: rules_and
+    uuid: 843f427a-8e49-4424-a3b8-9f3dd28bbc9f
+    conditions: {  }
+  actions:
+    id: rules_action_set
+    uuid: fc19c7ac-2470-4f1b-95a5-f47178b3a072
+    actions:
+      -
+        id: rules_action
+        uuid: b928c2b8-a8ba-41e8-b019-c0799a946fc0
+        context_values:
+          role: rotary_members
+          reply: ''
+        context_mapping:
+          subject: content_entity_manage_event.e_name.value
+          message: content_entity_manage_event.e_email_body.value
+          language: '@language.current_language_context:language_content'
+        context_processors:
+          role:
+            rules_tokens: {  }
+          reply:
+            rules_tokens: {  }
+        provides_mapping: {  }
+        action_id: rules_send_email_to_role
