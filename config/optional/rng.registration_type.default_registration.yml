@@ -1,7 +1,0 @@
-uuid: 41cd899d-9ce8-4589-a236-c3ce9f17415b
-langcode: en
-status: true
-dependencies: {  }
-label: Registration
-id: default_registration
-description: ''
