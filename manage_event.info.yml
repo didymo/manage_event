@@ -5,6 +5,6 @@ package: Custom
 core: 8.x
 package: Custom
 dependencies:
-    - rng (>= 8.x-1.0)
-    - userprofiles
-    - assetmanage
+  - rng (>= 8.x-1.0)
+  - userprofiles
+  - assetmanage
