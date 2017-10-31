@@ -1,94 +1,96 @@
 <?php
 
-use \Drupal\Core\Entity\EntityInterface;
-use \Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use \Drupal\Core\Render\Element;
+/**
+ * @file
+ * Main file for manage_event, consists of hooks that provide functionalities.
+ */
+
+use Drupal\rng\Entity\RuleSchedule;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\rng\Entity\RuleComponent;
 use Drupal\rng\Entity\Rule;
 
 /**
- * MF = Members and Friends
- * GP = General Public
+ * MF = Members and Friends, GP = General Public.
  */
 
 /**
- * Function to change the content of event overview and event dynamically
  * Implements hook_ENTITY_TYPE_view().
  */
-function manage_event_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+function manage_event_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
 
-    if($entity->bundle() == "event_overview")
-    {
-        $member_id = $entity->field_reference_member->target_id;
-        $general_id = $entity->field_reference_general->target_id;
-        /* Change title of MF event to provide an easy-to-use interface */
-        if(is_numeric($member_id))
-        {
-            $node_member = Node::load($member_id)
-                ->setTitle("Members and Friends");
-            /* Initialize the delete rule ID */
-            $delete_id = $node_member->field_delete_rule_id->value;
-            if($delete_id == 0)
-            {
-                $rule_id = db_query("SELECT id FROM rng_rule WHERE status = 0 AND event__target_id = :id",array(":id" => $member_id))->fetchCol();
-                $node_member->set('field_delete_rule_id',['value' => $rule_id[0]]);
-                $node_member->set('field_update_rule_id',['value' => $rule_id[1]]);
-            }
-            /* Dynamically shows the current amount of registrations of this event */
-            $registration = db_query("SELECT COUNT(id) FROM registration_field_data WHERE event__target_id = :id", array(":id" => $member_id))->fetchField();
-            if(!is_null($registration))
-                $node_member->set('field_registrant_count',['value' => $registration]);
-            $node_member->save();
-        }
-        /* Change title of GP event to provide an easy-to-use interface */
-        if(is_numeric($general_id))
-        {
-            $node_general = Node::load($general_id)
-                ->setTitle("General Public");
-            /* Initialize the delete rule ID */
-            $delete_id = $node_general->field_delete_rule_id->value;
-            if($delete_id == 0)
-            {
-                $rule_id = db_query("SELECT id FROM rng_rule WHERE status = 0 AND event__target_id = :id",array(":id" => $general_id))->fetchCol();
-                $node_general->set('field_delete_rule_id',['value' => $rule_id[0]]);
-                $node_general->set('field_update_rule_id',['value' => $rule_id[1]]);
-            }
-            /* Dynamically shows the current amount of registrations of this event */
-            $registration = db_query("SELECT COUNT(id) FROM registration_field_data WHERE event__target_id = :id", array(":id" => $general_id))->fetchField();
-            if(!is_null($registration))
-                $node_general->set('field_registrant_count',['value' => $registration]);
-            $node_general->save();
-        }
+  if ($entity->bundle() == "event_overview") {
+    $member_id = $entity->field_reference_member->target_id;
+    $general_id = $entity->field_reference_general->target_id;
+    /* Change title of MF event to provide an easy-to-use interface */
+    if (is_numeric($member_id)) {
+      $node_member = Node::load($member_id)
+        ->setTitle("Members and Friends");
+      /* Initialize the delete rule ID */
+      $delete_id = $node_member->field_delete_rule_id->value;
+      if ($delete_id == 0) {
+        $rule_id = db_query("SELECT id FROM rng_rule WHERE status = 0 AND event__target_id = :id", [":id" => $member_id])->fetchCol();
+        $node_member->set('field_delete_rule_id', ['value' => $rule_id[0]]);
+        $node_member->set('field_update_rule_id', ['value' => $rule_id[1]]);
+      }
+      /* Dynamically shows the current amount of registrations of this event */
+      $registration = db_query("SELECT COUNT(id) FROM registration_field_data WHERE event__target_id = :id", [":id" => $member_id])->fetchField();
+      if (!is_null($registration)) {
+        $node_member->set('field_registrant_count', ['value' => $registration]);
+      }
+      $node_member->save();
     }
-    else if($entity->bundle() == "event" || $entity->bundle() == "event_1")
-    {
-        /* Change title of MF & GP event to provide an easy-to-use interface */
-        $overview_id = $entity->field_reference->target_id;
-        $title = db_query("SELECT title FROM node_field_data WHERE nid = :id", array(":id" => $overview_id))->fetchField();
-        Node::load($entity->id())
-            ->setTitle($title)
-            ->save();
+    /* Change title of GP event to provide an easy-to-use interface */
+    if (is_numeric($general_id)) {
+      $node_general = Node::load($general_id)
+        ->setTitle("General Public");
+      /* Initialize the delete rule ID */
+      $delete_id = $node_general->field_delete_rule_id->value;
+      if ($delete_id == 0) {
+        $rule_id = db_query("SELECT id FROM rng_rule WHERE status = 0 AND event__target_id = :id", [":id" => $general_id])->fetchCol();
+        $node_general->set('field_delete_rule_id', ['value' => $rule_id[0]]);
+        $node_general->set('field_update_rule_id', ['value' => $rule_id[1]]);
+      }
+      /* Dynamically shows the current amount of registrations of this event */
+      $registration = db_query("SELECT COUNT(id) FROM registration_field_data WHERE event__target_id = :id", [":id" => $general_id])->fetchField();
+      if (!is_null($registration)) {
+        $node_general->set('field_registrant_count', ['value' => $registration]);
+      }
+      $node_general->save();
     }
-    else if($entity->bundle() == "email_confirmation")
-    {
-        /* Record user who has viewed the notification */
-        $uid = \Drupal::currentUser()->id();
-        $eid = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = :id",array(":id" => $entity->id()))->fetchField();
-        $email_type = $entity->field_email_confirmation_type->value;
-        \Drupal::database()->insert('email_confirmation')
-            ->fields([
-                'uid',
-                'eid',
-                'type',
-            ])
-            ->values(array(
-                $uid,
-                $eid,
-                $email_type,
-            ))
-            ->execute();
-    }
+  }
+  elseif ($entity->bundle() == "event" || $entity->bundle() == "event_1") {
+    /* Change title of MF & GP event to provide an easy-to-use interface */
+    $overview_id = $entity->field_reference->target_id;
+    $title = db_query("SELECT title FROM node_field_data WHERE nid = :id", [":id" => $overview_id])->fetchField();
+    Node::load($entity->id())
+      ->setTitle($title)
+      ->save();
+  }
+  elseif ($entity->bundle() == "email_confirmation") {
+    /* Record user who has viewed the notification */
+    $uid = \Drupal::currentUser()->id();
+    $eid = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = :id", [":id" => $entity->id()])->fetchField();
+    $email_type = $entity->field_email_confirmation_type->value;
+    \Drupal::database()->insert('email_confirmation')
+      ->fields([
+        'uid',
+        'eid',
+        'type',
+      ])
+      ->values([
+        $uid,
+        $eid,
+        $email_type,
+      ])
+      ->execute();
+  }
 }
 
 /**
@@ -99,32 +101,32 @@ function manage_event_node_view(array &$build, \Drupal\Core\Entity\EntityInterfa
  *
  * Implements hook_ENTITY_TYPE_create().
  */
-function manage_event_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
+function manage_event_node_insert(EntityInterface $node) {
 
-    if ($node->bundle() != 'event' && $node->bundle() != 'event_1' ) {
-        // Bail out if not an event node.
-        return;
-    }
+  if ($node->bundle() != 'event' && $node->bundle() != 'event_1') {
+    // Bail out if not an event node.
+    return;
+  }
 
-    /* Setup of notification email that will be sent to all registrants once they have registered to an event*/
-    // Set up services that we need
-    $container = Drupal::getContainer();
-    $action_manager = $container->get('plugin.manager.action');
-    $entityManager = $container->get('entity.manager');
-    /** @var \Drupal\rng\Plugin\Action\CourierTemplateCollection $actionPlugin */
-    $actionPlugin = $action_manager->createInstance('rng_courier_message');
+  /* Setup of notification email that will be sent to all registrants once they have registered to an event*/
+  // Set up services that we need.
+  $container = Drupal::getContainer();
+  $action_manager = $container->get('plugin.manager.action');
+  $entityManager = $container->get('entity.manager');
+  /** @var \Drupal\rng\Plugin\Action\CourierTemplateCollection $actionPlugin */
+  $actionPlugin = $action_manager->createInstance('rng_courier_message');
 
-    // Create a new template collection by faking a form submission.
-    $actionPlugin->submitConfigurationForm($dummy = array(), new \Drupal\Core\Form\FormState());
-    $template_collection = $actionPlugin->getTemplateCollection();
+  // Create a new template collection by faking a form submission.
+  $actionPlugin->submitConfigurationForm($dummy = [], new FormState());
+  $template_collection = $actionPlugin->getTemplateCollection();
 
-    // Get the email templates so we can modify them
-    $templates = $template_collection->getTemplates();
+  // Get the email templates so we can modify them.
+  $templates = $template_collection->getTemplates();
 
-    /** @var \Drupal\courier\Entity\Email $mail_template */
-    $mail_template = $templates[0];
-    $mail_template->setSubject("Your registration has been confirmed!");
-    $mail_template->setBody("                         
+  /** @var \Drupal\courier\Entity\Email $mail_template */
+  $mail_template = $templates[0];
+  $mail_template->setSubject("Your registration has been confirmed!");
+  $mail_template->setBody("                         
                          Greetings [identity:label]!<br>
                          Your registration for the event '[node:field_reference:entity:title]' has been confirmed.<br>
                          We look forward to seeing you at the event.<br>
@@ -137,52 +139,50 @@ function manage_event_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
                           &nbsp;<br>
                           Didn't register for this event?<br>
                           Please reply to this email to request to be removed from the mailing list.");
-    $mail_template->save();
+  $mail_template->save();
 
-    // Save the mail template collection for this event.
-    $context = $entityManager->getStorage('courier_context')
-        ->load('rng_registration_' . $node->getEntityTypeId());
-    if (!$context) {
-        throw new \Exception(sprintf('No context available for %s', $node->getEntityTypeId()));
-    }
-    $template_collection->setContext($context);
-    $template_collection->setOwner($node);
-    $template_collection->save();
+  // Save the mail template collection for this event.
+  $context = $entityManager->getStorage('courier_context')
+    ->load('rng_registration_' . $node->getEntityTypeId());
+  if (!$context) {
+    throw new \Exception(sprintf('No context available for %s', $node->getEntityTypeId()));
+  }
+  $template_collection->setContext($context);
+  $template_collection->setOwner($node);
+  $template_collection->save();
 
-    // Set the action to send mail on new registrations.
-    $action = RuleComponent::create([])
-        ->setPluginId($actionPlugin->getPluginId())
-        ->setConfiguration($actionPlugin->getConfiguration())
-        ->setType('action');
-    $rule = Rule::create([
-        'event' => array('entity' => $node),
-        'trigger_id' => 'entity:registration:new',
-    ]);
-    // Make rule active
-    $rule->setIsActive(TRUE)
-        ->save();
-    // Save the action
-    $action->setRule($rule)->save();
+  // Set the action to send mail on new registrations.
+  $action = RuleComponent::create([])
+    ->setPluginId($actionPlugin->getPluginId())
+    ->setConfiguration($actionPlugin->getConfiguration())
+    ->setType('action');
+  $rule = Rule::create([
+    'event' => ['entity' => $node],
+    'trigger_id' => 'entity:registration:new',
+  ]);
+  // Make rule active.
+  $rule->setIsActive(TRUE)
+    ->save();
+  // Save the action.
+  $action->setRule($rule)->save();
 
+  /* Setup of cancellation email that will be sent to all registrants of an event once it is cancelled */
+  // Set up services that we need.
+  $container = Drupal::getContainer();
+  $action_manager = $container->get('plugin.manager.action');
+  $entityManager = $container->get('entity.manager');
+  /** @var \Drupal\rng\Plugin\Action\CourierTemplateCollection $actionPlugin */
+  $actionPlugin = $action_manager->createInstance('rng_courier_message');
 
-    /* Setup of cancellation email that will be sent to all registrants of an event once it is cancelled */
-    // Set up services that we need
-    $container = Drupal::getContainer();
-    $action_manager = $container->get('plugin.manager.action');
-    $entityManager = $container->get('entity.manager');
-    /** @var \Drupal\rng\Plugin\Action\CourierTemplateCollection $actionPlugin */
-    $actionPlugin = $action_manager->createInstance('rng_courier_message');
-
-    // Create a new template collection by faking a form submission.
-    $actionPlugin->submitConfigurationForm($dummy = array(), new \Drupal\Core\Form\FormState());
-    $template_collection = $actionPlugin->getTemplateCollection();
-    $templates = $template_collection->getTemplates();
-    /** @var \Drupal\courier\Entity\Email $mail_template2 */
-    $mail_template2 = $templates[0];
-    $mail_template2->setSubject("Event cancellation: [node:title] (Event ID: [node:nid])");
-    if($node->bundle() == "event")
-    {
-        $mail_template2->setBody("
+  // Create a new template collection by faking a form submission.
+  $actionPlugin->submitConfigurationForm($dummy = [], new FormState());
+  $template_collection = $actionPlugin->getTemplateCollection();
+  $templates = $template_collection->getTemplates();
+  /** @var \Drupal\courier\Entity\Email $mail_template2 */
+  $mail_template2 = $templates[0];
+  $mail_template2->setSubject("Event cancellation: [node:title] (Event ID: [node:nid])");
+  if ($node->bundle() == "event") {
+    $mail_template2->setBody("
                                 Greetings, [identity:label]!<br>
                                 We regret to inform you that unfortunately the event '[node:title]' has been cancelled.<br>
                                 We apologize for any inconvenience caused.<br>
@@ -190,70 +190,67 @@ function manage_event_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
                                 &nbsp;<br>
                                 One more thing..<br>
 				                Please click on the link below to acknowledge that you have been notified.");
-    }
-    else
-    {
-        $mail_template2->setBody("
+  }
+  else {
+    $mail_template2->setBody("
                                 Greetings, [identity:label]!<br>
                                We regret to inform you that unfortunately, the event '[node:title]' has been cancelled.<br>
                                 We apologize for any inconvenience caused.<br>
                                 We look forward to seeing you at the next event!<br>
                                 ");
-    }
-    $mail_template2->save();
+  }
+  $mail_template2->save();
 
-    // Save the mail template collection for this event.
-    $context = $entityManager->getStorage('courier_context')
-        ->load('rng_registration_' . $node->getEntityTypeId());
-    if (!$context) {
-        throw new \Exception(sprintf('No context available for %s', $node->getEntityTypeId()));
-    }
-    $template_collection->setContext($context);
-    $template_collection->setOwner($node);
-    $template_collection->save();
+  // Save the mail template collection for this event.
+  $context = $entityManager->getStorage('courier_context')
+    ->load('rng_registration_' . $node->getEntityTypeId());
+  if (!$context) {
+    throw new \Exception(sprintf('No context available for %s', $node->getEntityTypeId()));
+  }
+  $template_collection->setContext($context);
+  $template_collection->setOwner($node);
+  $template_collection->save();
 
-    $action2 = RuleComponent::create([])
-        ->setPluginId($actionPlugin->getPluginId())
-        ->setConfiguration($actionPlugin->getConfiguration())
-        ->setType('action');
+  $action2 = RuleComponent::create([])
+    ->setPluginId($actionPlugin->getPluginId())
+    ->setConfiguration($actionPlugin->getConfiguration())
+    ->setType('action');
 
-    $rule2 = Rule::create([
-        'event' => array('entity' => $node),
-        'trigger_id' => "rng:custom:date",
-    ]);
-    $rule2->save();
-    $action2->setRule($rule2)->save();
+  $rule2 = Rule::create([
+    'event' => ['entity' => $node],
+    'trigger_id' => "rng:custom:date",
+  ]);
+  $rule2->save();
+  $action2->setRule($rule2)->save();
 
-    $rule_component = RuleComponent::create()
-        ->setRule($rule2)
-        ->setType('condition')
-        ->setPluginId('rng_rule_scheduler');
-    $rule_component->save();
+  $rule_component = RuleComponent::create()
+    ->setRule($rule2)
+    ->setType('condition')
+    ->setPluginId('rng_rule_scheduler');
+  $rule_component->save();
 
-    $rule_component->setConfiguration([
-        'rng_rule_component' => $rule_component->id(),
-    ]);
-    $rule_component->save();
+  $rule_component->setConfiguration([
+    'rng_rule_component' => $rule_component->id(),
+  ]);
+  $rule_component->save();
 
+  /* Setup of update email that will be sent to all registrants of an event that is recently updated */
+  // Set up services that we need.
+  $container = Drupal::getContainer();
+  $action_manager = $container->get('plugin.manager.action');
+  $entityManager = $container->get('entity.manager');
+  /** @var \Drupal\rng\Plugin\Action\CourierTemplateCollection $actionPlugin */
+  $actionPlugin = $action_manager->createInstance('rng_courier_message');
 
-    /* Setup of update email that will be sent to all registrants of an event that is recently updated */
-    // Set up services that we need
-    $container = Drupal::getContainer();
-    $action_manager = $container->get('plugin.manager.action');
-    $entityManager = $container->get('entity.manager');
-    /** @var \Drupal\rng\Plugin\Action\CourierTemplateCollection $actionPlugin */
-    $actionPlugin = $action_manager->createInstance('rng_courier_message');
-
-    // Create a new template collection by faking a form submission.
-    $actionPlugin->submitConfigurationForm($dummy = array(), new \Drupal\Core\Form\FormState());
-    $template_collection = $actionPlugin->getTemplateCollection();
-    $templates = $template_collection->getTemplates();
-    /** @var \Drupal\courier\Entity\Email $mail_template3 */
-    $mail_template3 = $templates[0];
-    $mail_template3->setSubject("Event update: [node:title] (Event ID: [node:nid])");
-    if($node->bundle() == "event")
-    {
-        $mail_template3->setBody("
+  // Create a new template collection by faking a form submission.
+  $actionPlugin->submitConfigurationForm($dummy = [], new FormState());
+  $template_collection = $actionPlugin->getTemplateCollection();
+  $templates = $template_collection->getTemplates();
+  /** @var \Drupal\courier\Entity\Email $mail_template3 */
+  $mail_template3 = $templates[0];
+  $mail_template3->setSubject("Event update: [node:title] (Event ID: [node:nid])");
+  if ($node->bundle() == "event") {
+    $mail_template3->setBody("
                                Greetings, [identity:label]! <br>
                                This is to inform you that the event '[node:title]' has just been updated!<br>
                                &nbsp;<br>
@@ -274,10 +271,9 @@ function manage_event_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
                                One more thing..<br>                               
                                Please click on the link below to acknowledge that you have been notified.
                                ");
-    }
-    else
-    {
-        $mail_template3->setBody("
+  }
+  else {
+    $mail_template3->setBody("
                                Greetings, [identity:label]! <br>
                                This is to inform you that the event '[node:title]' has just been updated!<br>
                                &nbsp;<br>
@@ -295,228 +291,227 @@ function manage_event_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
                                [node:field_venue:postal_code]<br>
                                [node:field_venue:locality]
                                ");
-    }
-    $mail_template3->save();
+  }
+  $mail_template3->save();
 
-    // Save the mail template collection for this event.
-    $context = $entityManager->getStorage('courier_context')
-        ->load('rng_registration_' . $node->getEntityTypeId());
-    if (!$context) {
-        throw new \Exception(sprintf('No context available for %s', $node->getEntityTypeId()));
-    }
-    $template_collection->setContext($context);
-    $template_collection->setOwner($node);
-    $template_collection->save();
+  // Save the mail template collection for this event.
+  $context = $entityManager->getStorage('courier_context')
+    ->load('rng_registration_' . $node->getEntityTypeId());
+  if (!$context) {
+    throw new \Exception(sprintf('No context available for %s', $node->getEntityTypeId()));
+  }
+  $template_collection->setContext($context);
+  $template_collection->setOwner($node);
+  $template_collection->save();
 
-    $action3 = RuleComponent::create([])
-        ->setPluginId($actionPlugin->getPluginId())
-        ->setConfiguration($actionPlugin->getConfiguration())
-        ->setType('action');
+  $action3 = RuleComponent::create([])
+    ->setPluginId($actionPlugin->getPluginId())
+    ->setConfiguration($actionPlugin->getConfiguration())
+    ->setType('action');
 
-    $rule3 = Rule::create([
-        'event' => array('entity' => $node),
-        'trigger_id' => "rng:custom:date",
-    ]);
-    $rule3->save();
-    $action3->setRule($rule3)->save();
+  $rule3 = Rule::create([
+    'event' => ['entity' => $node],
+    'trigger_id' => "rng:custom:date",
+  ]);
+  $rule3->save();
+  $action3->setRule($rule3)->save();
 
-    $rule_component = RuleComponent::create()
-        ->setRule($rule3)
-        ->setType('condition')
-        ->setPluginId('rng_rule_scheduler');
-    $rule_component->save();
+  $rule_component = RuleComponent::create()
+    ->setRule($rule3)
+    ->setType('condition')
+    ->setPluginId('rng_rule_scheduler');
+  $rule_component->save();
 
-    $rule_component->setConfiguration([
-        'rng_rule_component' => $rule_component->id(),
-    ]);
-    $rule_component->save();
+  $rule_component->setConfiguration([
+    'rng_rule_component' => $rule_component->id(),
+  ]);
+  $rule_component->save();
 }
 
 /**
- * Function to update MF and GP events automatically from event overview
  * Implements hook_node_update().
  */
-function manage_event_node_update(Drupal\Core\Entity\EntityInterface $node){
+function manage_event_node_update(EntityInterface $node) {
 
-    if ($node->bundle() == 'event_overview')  {
-        $id = $node->id();
-        $member_id = $node->field_reference_member->target_id;
-        $general_id = $node->field_reference_general->target_id;
+  if ($node->bundle() == 'event_overview') {
+    $id = $node->id();
+    $member_id = $node->field_reference_member->target_id;
+    $general_id = $node->field_reference_general->target_id;
 
-        $title = $node->getTitle();
-        $description = $node->field_description->value;
-        $image_id = $node->field_image->target_id;
-        $country_code = $node->field_venue->country_code;
-        $address_line1 = $node->field_venue->address_line1;
-        $address_line2 = $node->field_venue->address_line2;
-        $locality = $node->field_venue->locality;
-        $postal_code = $node->field_venue->postal_code;
+    $title = $node->getTitle();
+    $description = $node->field_description->value;
+    $image_id = $node->field_image->target_id;
+    $country_code = $node->field_venue->country_code;
+    $address_line1 = $node->field_venue->address_line1;
+    $address_line2 = $node->field_venue->address_line2;
+    $locality = $node->field_venue->locality;
+    $postal_code = $node->field_venue->postal_code;
 
-        date_default_timezone_set('Australia/Sydney');
-        $date = date('m/d/Y h:i:s a', time());
-        $date = strtotime($date);
+    date_default_timezone_set('Australia/Sydney');
+    $date = date('m/d/Y h:i:s a', time());
+    $date = strtotime($date);
 
-        $important_update = false;
-        /* Update MF event */
-        if(is_numeric($member_id))
-        {
-            /* Update title and description field*/
-            $node_member = Node::load($member_id)
-                ->setTitle($title)
-                ->set('field_description', $description);
+    $important_update = FALSE;
+    /* Update MF event */
+    if (is_numeric($member_id)) {
+      /* Update title and description field*/
+      $node_member = Node::load($member_id)
+        ->setTitle($title)
+        ->set('field_description', $description);
 
-            /* Update image field */
-            $image_id_member = $node_member->field_image->target_id;
-            if (is_numeric($image_id)) {
-                if (!is_numeric($image_id_member) || $image_id != $image_id_member)
-                    $node_member->set('field_image', $image_id);
-            } else {
-                if (is_numeric($image_id_member))
-                    $node_member->set('field_image', NULL);
-            }
-
-            /* Update venue field */
-            $country_code_member = $node_member->field_venue->country_code;
-            $address_line1_member  = $node_member->field_venue->address_line1;
-            $address_line2_member  = $node_member->field_venue->address_line2;
-            $locality_member  = $node_member->field_venue->locality;
-            $postal_code_member  = $node_member->field_venue->postal_code;
-
-            if(!is_null($address_line1_member))
-            {
-                if($country_code != $country_code_member || $address_line1 != $address_line1_member || $address_line2 != $address_line2_member
-                    || $locality != $locality_member || $postal_code != $postal_code_member)
-                {
-                    $node_member->set('field_venue',[
-                        'country_code' => $country_code,
-                        'address_line1' => $address_line1,
-                        'address_line2' => $address_line2,
-                        'locality' => $locality,
-                        'postal_code' => $postal_code,
-                    ]);
-                    $important_update = true;
-                }
-            }
-
-            /* Update event datetime field */
-            $datetime = db_query("SELECT field_event_date_overview_value FROM node__field_event_date_overview WHERE entity_id = :id",array(":id" => $id))->fetchField();
-            $datetime_end = db_query("SELECT field_event_date_end_member_value FROM node__field_event_date_end_member WHERE entity_id = :id",array(":id" => $id))->fetchField();
-            $datetime_member = db_query("SELECT field_event_date_value FROM node__field_event_date WHERE entity_id = :id",array(":id" => $member_id))->fetchField();
-            $datetime_end_member= db_query("SELECT field_event_date_end_value FROM node__field_event_date_end WHERE entity_id = :id",array(":id" => $member_id))->fetchField();
-            if($datetime != $datetime_member) {
-                $node_member->set('field_event_date', $datetime);
-                $important_update = true;
-            }
-            if($datetime_end != $datetime_end_member) {
-                $node_member->set('field_event_date_end',$datetime_end);
-                $important_update = true;
-            }
-            $node_member->save();
-
-            if($important_update == true) {
-                $email_nodes = db_query("SELECT entity_id FROM node__field_reference WHERE bundle = :bundle AND field_reference_target_id = :id", array(":bundle" => 'email_confirmation', ":id" => $node->id()))->fetchCol();
-                if($node_member->isPublished() == TRUE)
-                {
-                    Node::load($email_nodes[0])
-                        ->setPublished(TRUE)
-                        ->save();
-
-                    $rule_id = db_query('SELECT field_update_rule_id_value FROM node__field_update_rule_id WHERE entity_id = :id',array(":id" => $member_id))->fetchField();
-                    $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", array(":rule_id" => $rule_id))->fetchField();
-                    if(!is_null($rule_id)) {
-                        Rule::load($rule_id)
-                            ->setIsActive(TRUE)
-                            ->save();
-                        $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-                        \Drupal\rng\Entity\RuleSchedule::load($scheduler)
-                            ->setDate($date)
-                            ->save();
-                        $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = $member_id")->fetchField();
-                        \Drupal::database()->delete('email_confirmation')
-                        ->condition('eid', $overview_id)
-                            ->execute();
-                    }
-                }
-            }
+      /* Update image field */
+      $image_id_member = $node_member->field_image->target_id;
+      if (is_numeric($image_id)) {
+        if (!is_numeric($image_id_member) || $image_id != $image_id_member) {
+          $node_member->set('field_image', $image_id);
         }
-
-        /* Update GP event */
-        if(is_numeric($general_id))
-        {
-            $important_update = false;
-            /* Update title and description field*/
-            $node_general = Node::load($general_id)
-                ->setTitle($title)
-                ->set('field_description', $description);
-
-            /* Update image field */
-            $image_id_general = $node_general->field_image->target_id;
-            if (is_numeric($image_id)) {
-                if (!is_numeric($image_id_general) || $image_id != $image_id_general)
-                    $node_general->set('field_image', $image_id);
-            } else {
-                if (is_numeric($image_id_general))
-                    $node_general->set('field_image', NULL);
-            }
-
-            /* Update venue field */
-            $country_code_general = $node_general->field_venue->country_code;
-            $address_line1_general  = $node_general->field_venue->address_line1;
-            $address_line2_general  = $node_general->field_venue->address_line2;
-            $locality_general  = $node_general->field_venue->locality;
-            $postal_code_general  = $node_general->field_venue->postal_code;
-
-            if($country_code != $country_code_general || $address_line1 != $address_line1_general || $address_line2 != $address_line2_general
-                || $locality != $locality_general || $postal_code != $postal_code_general)
-            {
-                $node_general->set('field_venue',[
-                    'country_code' => $country_code,
-                    'address_line1' => $address_line1,
-                    'address_line2' => $address_line2,
-                    'locality' => $locality,
-                    'postal_code' => $postal_code,
-                ]);
-                $important_update = true;
-            }
-
-            /* Update event datetime field */
-            $datetime = db_query("SELECT field_event_date_general_value FROM node__field_event_date_general WHERE entity_id = :id",array(":id" => $id))->fetchField();
-            $datetime_end = db_query("SELECT field_event_date_end_general_value FROM node__field_event_date_end_general WHERE entity_id = :id",array(":id" => $id))->fetchField();
-            $datetime_general = db_query("SELECT field_event_date_value FROM node__field_event_date WHERE entity_id = :id",array(":id" => $general_id))->fetchField();
-            $datetime_end_general= db_query("SELECT field_event_date_end_value FROM node__field_event_date_end WHERE entity_id = :id",array(":id" => $general_id))->fetchField();
-            if($datetime != $datetime_general) {
-                $node_general->set('field_event_date', $datetime);
-                $important_update = true;
-            }
-            if($datetime_end != $datetime_end_general) {
-                $node_general->set('field_event_date_end',$datetime_end);
-                $important_update = true;
-            }
-            $node_general->save();
-
-            if($important_update == true) {
-
-                if($node_general->isPublished() == TRUE) {
-                    $rule_id = db_query('SELECT field_update_rule_id_value FROM node__field_update_rule_id WHERE entity_id = :id',array(":id" => $general_id))->fetchField();
-                    $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", array(":rule_id" => $rule_id))->fetchField();
-                    if(!is_null($rule_id)) {
-                        Rule::load($rule_id)
-                            ->setIsActive(TRUE)
-                            ->save();
-                        $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-                        \Drupal\rng\Entity\RuleSchedule::load($scheduler)
-                            ->setDate($date)
-                            ->save();
-                        $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = $member_id")->fetchField();
-                        \Drupal::database()->delete('email_confirmation')
-                            ->condition('eid', $overview_id)
-                            ->execute();
-                    }
-                }
-            }
+      }
+      else {
+        if (is_numeric($image_id_member)) {
+          $node_member->set('field_image', NULL);
         }
-        \Drupal::service('cron')->run();
+      }
+
+      /* Update venue field */
+      $country_code_member = $node_member->field_venue->country_code;
+      $address_line1_member = $node_member->field_venue->address_line1;
+      $address_line2_member = $node_member->field_venue->address_line2;
+      $locality_member = $node_member->field_venue->locality;
+      $postal_code_member = $node_member->field_venue->postal_code;
+
+      if (!is_null($address_line1_member)) {
+        if ($country_code != $country_code_member || $address_line1 != $address_line1_member || $address_line2 != $address_line2_member
+        || $locality != $locality_member || $postal_code != $postal_code_member) {
+          $node_member->set('field_venue', [
+            'country_code' => $country_code,
+            'address_line1' => $address_line1,
+            'address_line2' => $address_line2,
+            'locality' => $locality,
+            'postal_code' => $postal_code,
+          ]);
+          $important_update = TRUE;
+        }
+      }
+
+      /* Update event datetime field */
+      $datetime = db_query("SELECT field_event_date_overview_value FROM node__field_event_date_overview WHERE entity_id = :id", [":id" => $id])->fetchField();
+      $datetime_end = db_query("SELECT field_event_date_end_member_value FROM node__field_event_date_end_member WHERE entity_id = :id", [":id" => $id])->fetchField();
+      $datetime_member = db_query("SELECT field_event_date_value FROM node__field_event_date WHERE entity_id = :id", [":id" => $member_id])->fetchField();
+      $datetime_end_member = db_query("SELECT field_event_date_end_value FROM node__field_event_date_end WHERE entity_id = :id", [":id" => $member_id])->fetchField();
+      if ($datetime != $datetime_member) {
+        $node_member->set('field_event_date', $datetime);
+        $important_update = TRUE;
+      }
+      if ($datetime_end != $datetime_end_member) {
+        $node_member->set('field_event_date_end', $datetime_end);
+        $important_update = TRUE;
+      }
+      $node_member->save();
+
+      if ($important_update == TRUE) {
+        $email_nodes = db_query("SELECT entity_id FROM node__field_reference WHERE bundle = :bundle AND field_reference_target_id = :id", [":bundle" => 'email_confirmation', ":id" => $node->id()])->fetchCol();
+        if ($node_member->isPublished() == TRUE) {
+          Node::load($email_nodes[0])
+            ->setPublished(TRUE)
+            ->save();
+
+          $rule_id = db_query('SELECT field_update_rule_id_value FROM node__field_update_rule_id WHERE entity_id = :id', [":id" => $member_id])->fetchField();
+          $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", [":rule_id" => $rule_id])->fetchField();
+          if (!is_null($rule_id)) {
+            Rule::load($rule_id)
+              ->setIsActive(TRUE)
+              ->save();
+            $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+            RuleSchedule::load($scheduler)
+              ->setDate($date)
+              ->save();
+            $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = $member_id")->fetchField();
+            \Drupal::database()->delete('email_confirmation')
+              ->condition('eid', $overview_id)
+              ->execute();
+          }
+        }
+      }
     }
+
+    /* Update GP event */
+    if (is_numeric($general_id)) {
+      $important_update = FALSE;
+      /* Update title and description field*/
+      $node_general = Node::load($general_id)
+        ->setTitle($title)
+        ->set('field_description', $description);
+
+      /* Update image field */
+      $image_id_general = $node_general->field_image->target_id;
+      if (is_numeric($image_id)) {
+        if (!is_numeric($image_id_general) || $image_id != $image_id_general) {
+          $node_general->set('field_image', $image_id);
+        }
+      }
+      else {
+        if (is_numeric($image_id_general)) {
+          $node_general->set('field_image', NULL);
+        }
+      }
+
+      /* Update venue field */
+      $country_code_general = $node_general->field_venue->country_code;
+      $address_line1_general = $node_general->field_venue->address_line1;
+      $address_line2_general = $node_general->field_venue->address_line2;
+      $locality_general = $node_general->field_venue->locality;
+      $postal_code_general = $node_general->field_venue->postal_code;
+
+      if ($country_code != $country_code_general || $address_line1 != $address_line1_general || $address_line2 != $address_line2_general
+        || $locality != $locality_general || $postal_code != $postal_code_general) {
+        $node_general->set('field_venue', [
+          'country_code' => $country_code,
+          'address_line1' => $address_line1,
+          'address_line2' => $address_line2,
+          'locality' => $locality,
+          'postal_code' => $postal_code,
+        ]);
+        $important_update = TRUE;
+      }
+
+      /* Update event datetime field */
+      $datetime = db_query("SELECT field_event_date_general_value FROM node__field_event_date_general WHERE entity_id = :id", [":id" => $id])->fetchField();
+      $datetime_end = db_query("SELECT field_event_date_end_general_value FROM node__field_event_date_end_general WHERE entity_id = :id", [":id" => $id])->fetchField();
+      $datetime_general = db_query("SELECT field_event_date_value FROM node__field_event_date WHERE entity_id = :id", [":id" => $general_id])->fetchField();
+      $datetime_end_general = db_query("SELECT field_event_date_end_value FROM node__field_event_date_end WHERE entity_id = :id", [":id" => $general_id])->fetchField();
+      if ($datetime != $datetime_general) {
+        $node_general->set('field_event_date', $datetime);
+        $important_update = TRUE;
+      }
+      if ($datetime_end != $datetime_end_general) {
+        $node_general->set('field_event_date_end', $datetime_end);
+        $important_update = TRUE;
+      }
+      $node_general->save();
+
+      if ($important_update == TRUE) {
+
+        if ($node_general->isPublished() == TRUE) {
+          $rule_id = db_query('SELECT field_update_rule_id_value FROM node__field_update_rule_id WHERE entity_id = :id', [":id" => $general_id])->fetchField();
+          $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", [":rule_id" => $rule_id])->fetchField();
+          if (!is_null($rule_id)) {
+            Rule::load($rule_id)
+              ->setIsActive(TRUE)
+              ->save();
+            $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+            RuleSchedule::load($scheduler)
+              ->setDate($date)
+              ->save();
+            $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = $member_id")->fetchField();
+            \Drupal::database()->delete('email_confirmation')
+              ->condition('eid', $overview_id)
+              ->execute();
+          }
+        }
+      }
+    }
+    \Drupal::service('cron')->run();
+  }
 }
 
 /**
@@ -524,137 +519,131 @@ function manage_event_node_update(Drupal\Core\Entity\EntityInterface $node){
  */
 function manage_event_menu_local_tasks_alter(&$data, $route_name) {
 
-    if($route_name == "entity.node.canonical")
-    {
-        $nid = \Drupal::routeMatch()->getParameter('node');
-        $nid = $nid->id();
-        $type = db_query("SELECT type FROM node WHERE nid = :id",array(":id" => $nid))->fetchField();
+  if ($route_name == "entity.node.canonical") {
+    $nid = \Drupal::routeMatch()->getParameter('node');
+    $nid = $nid->id();
+    $type = db_query("SELECT type FROM node WHERE nid = :id", [":id" => $nid])->fetchField();
 
-        if($type == "event" || $type == "event_1") {
-            $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = $nid")->fetchField();
-            foreach ($data['tabs'][0] as $key => $value) {
-                $edit_link = $value['#link']['url'];
-                if(!is_null($edit_link)) {
-                    $edit_link = $edit_link->toString();
-                    if (strstr($edit_link, "edit") !== false) {
-                        $new_edit_link = \Drupal\Core\Url::fromRoute('entity.node.edit_form',['node' => $overview_id]);
-                        $data['tabs'][0][$key]['#link']['url'] = $new_edit_link;
-                    }
-                }
-            }
+    if ($type == "event" || $type == "event_1") {
+      $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = $nid")->fetchField();
+      foreach ($data['tabs'][0] as $key => $value) {
+        $edit_link = $value['#link']['url'];
+        if (!is_null($edit_link)) {
+          $edit_link = $edit_link->toString();
+          if (strstr($edit_link, "edit") !== FALSE) {
+            $new_edit_link = Url::fromRoute('entity.node.edit_form', ['node' => $overview_id]);
+            $data['tabs'][0][$key]['#link']['url'] = $new_edit_link;
+          }
         }
-        else if($type == "event_overview")
-        {
-            $data['tabs'][0]['node.email_update'] = array(
-                '#theme' => 'menu_local_task',
-                '#link' => array(
-                    'title' => t('Confirmation List (Event Update)'),
-                    'url' => \Drupal\Core\Url::fromRoute('manage_event.email.confirmation.listing',['node' => $nid, 'type' => 0]),
-                ),
-            );
-
-            $data['tabs'][0]['node.email_delete'] = array(
-                '#theme' => 'menu_local_task',
-                '#link' => array(
-                    'title' => t('Confirmation List (Event Cancel)'),
-                    'url' => \Drupal\Core\Url::fromRoute('manage_event.email.confirmation.listing',['node' => $nid, 'type' => 1]),
-                ),
-            );
-        }
+      }
     }
-}
+    elseif ($type == "event_overview") {
+      $data['tabs'][0]['node.email_update'] = [
+        '#theme' => 'menu_local_task',
+        '#link' => [
+          'title' => t('Confirmation List (Event Update)'),
+          'url' => Url::fromRoute('manage_event.email.confirmation.listing', ['node' => $nid, 'type' => 0]),
+        ],
+      ];
 
-
-function user_register_url($account, $eid, $type, $options = []) {
-    $timestamp = REQUEST_TIME;
-    $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
-    return \Drupal::url('manage_event.one_time_login', [
-        'uid' => $account->id(),
-        'timestamp' => $timestamp,
-        'hash' => user_pass_rehash($account, $timestamp),
-        'eid' => $eid,
-        'type' => $type
-    ], [
-        'absolute' => TRUE,
-        'language' => \Drupal::languageManager()->getLanguage($langcode),
-    ]);
+      $data['tabs'][0]['node.email_delete'] = [
+        '#theme' => 'menu_local_task',
+        '#link' => [
+          'title' => t('Confirmation List (Event Cancel)'),
+          'url' => Url::fromRoute('manage_event.email.confirmation.listing', ['node' => $nid, 'type' => 1]),
+        ],
+      ];
+    }
+  }
 }
 
 /**
-* Implements hook_mail_alter().
+ * Function to generate a hash link.
  */
-function manage_event_mail_alter(&$message)
-{
-    if(is_numeric(strpos($message['subject'],"Event update")))
-    {
-        $to = $message['to'];
-        $pos1 = strpos($to,'<');
-        $pos2 = strpos($to,'>');
-        $startIndex = min($pos1, $pos2);
-        $length = abs($pos1 - $pos2);
-        $to = substr($to, $startIndex+1, $length-1);
-        $uid = db_query("SELECT uid FROM users_field_data WHERE mail = :mail", array(":mail" => $to))->fetchField();
-        $pos1 = strpos($message['subject'],'Event ID:');
-        $length = strlen($message['subject']);
-        $pos1 = $pos1 + 10;
-        $length = $length - $pos1;
-        $eid = substr($message['subject'],$pos1,$length-1);
-        $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = :id",array("id" => $eid))->fetchField();
-        $eid = db_query("SELECT field_reference_update_target_id FROM node__field_reference_update WHERE entity_id = :id", array(":id" => $overview_id))->fetchField();
-        if(is_numeric($uid)) //for MF recipients only
-        {
-            $account = \Drupal\user\Entity\User::load($uid);
-            $url = user_register_url($account,$eid,0);
-            $message['body'][] = $url;
-        }
+function user_register_url($account, $eid, $type, $options = []) {
+  $timestamp = REQUEST_TIME;
+  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
+  return \Drupal::url('manage_event.one_time_login', [
+    'uid' => $account->id(),
+    'timestamp' => $timestamp,
+    'hash' => user_pass_rehash($account, $timestamp),
+    'eid' => $eid,
+    'type' => $type,
+  ], [
+    'absolute' => TRUE,
+    'language' => \Drupal::languageManager()->getLanguage($langcode),
+  ]);
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function manage_event_mail_alter(&$message) {
+  if (is_numeric(strpos($message['subject'], "Event update"))) {
+    $to = $message['to'];
+    $pos1 = strpos($to, '<');
+    $pos2 = strpos($to, '>');
+    $startIndex = min($pos1, $pos2);
+    $length = abs($pos1 - $pos2);
+    $to = substr($to, $startIndex + 1, $length - 1);
+    $uid = db_query("SELECT uid FROM users_field_data WHERE mail = :mail", [":mail" => $to])->fetchField();
+    $pos1 = strpos($message['subject'], 'Event ID:');
+    $length = strlen($message['subject']);
+    $pos1 = $pos1 + 10;
+    $length = $length - $pos1;
+    $eid = substr($message['subject'], $pos1, $length - 1);
+    $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = :id", ["id" => $eid])->fetchField();
+    $eid = db_query("SELECT field_reference_update_target_id FROM node__field_reference_update WHERE entity_id = :id", [":id" => $overview_id])->fetchField();
+    // For MF recipients only.
+    if (is_numeric($uid)) {
+      $account = User::load($uid);
+      $url = user_register_url($account, $eid, 0);
+      $message['body'][] = $url;
     }
-    else if(is_numeric(strpos($message['subject'],"Event cancellation")))
-    {
-        $to = $message['to'];
-        $pos1 = strpos($to,'<');
-        $pos2 = strpos($to,'>');
-        $startIndex = min($pos1, $pos2);
-        $length = abs($pos1 - $pos2);
-        $to = substr($to, $startIndex+1, $length-1);
-        $uid = db_query("SELECT uid FROM users_field_data WHERE mail = :mail", array(":mail" => $to))->fetchField();
-        $pos1 = strpos($message['subject'],'Event ID:');
-        $length = strlen($message['subject']);
-        $pos1 = $pos1 + 10;
-        $length = $length - $pos1;
-        $eid = substr($message['subject'],$pos1,$length-1);
-        $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = :id",array("id" => $eid))->fetchField();
-        $eid = db_query("SELECT field_reference_delete_target_id FROM node__field_reference_delete WHERE entity_id = :id", array(":id" => $overview_id))->fetchField();
-        if(is_numeric($uid))
-        {
-            $account = \Drupal\user\Entity\User::load($uid);
-            $string = user_register_url($account,$eid,1);
-            $message['body'][] = $string;
-        }
+  }
+  elseif (is_numeric(strpos($message['subject'], "Event cancellation"))) {
+    $to = $message['to'];
+    $pos1 = strpos($to, '<');
+    $pos2 = strpos($to, '>');
+    $startIndex = min($pos1, $pos2);
+    $length = abs($pos1 - $pos2);
+    $to = substr($to, $startIndex + 1, $length - 1);
+    $uid = db_query("SELECT uid FROM users_field_data WHERE mail = :mail", [":mail" => $to])->fetchField();
+    $pos1 = strpos($message['subject'], 'Event ID:');
+    $length = strlen($message['subject']);
+    $pos1 = $pos1 + 10;
+    $length = $length - $pos1;
+    $eid = substr($message['subject'], $pos1, $length - 1);
+    $overview_id = db_query("SELECT field_reference_target_id FROM node__field_reference WHERE entity_id = :id", ["id" => $eid])->fetchField();
+    $eid = db_query("SELECT field_reference_delete_target_id FROM node__field_reference_delete WHERE entity_id = :id", [":id" => $overview_id])->fetchField();
+    if (is_numeric($uid)) {
+      $account = User::load($uid);
+      $string = user_register_url($account, $eid, 1);
+      $message['body'][] = $string;
     }
-    else
-    {
-        $event = db_query("SELECT id FROM event WHERE e_name = :event",array(":event" => $message['subject']))->fetchField();
-        if(is_numeric($event))
-        {
-            if (strcmp($message['to'],"") !== 0) {
-                $uid = db_query("SELECT uid FROM users_field_data WHERE mail = :mail", array(":mail" => $message['to']))->fetchField();
-                $account = \Drupal\user\Entity\User::load($uid);
-                $eid = db_query("SELECT MAX(nid) FROM node WHERE type = :type", array(":type" => "event"))->fetchField();
-                $string = user_register_url($account, $eid, 2);
-                $message['body'][] = $string;
-            }
-            else {
-                $message['send'] = FALSE;
-            }
-        }
+  }
+  else {
+    $event = db_query("SELECT id FROM event WHERE e_name = :event", [":event" => $message['subject']])->fetchField();
+    if (is_numeric($event)) {
+      if (strcmp($message['to'], "") !== 0) {
+        $uid = db_query("SELECT uid FROM users_field_data WHERE mail = :mail", [":mail" => $message['to']])->fetchField();
+        $account = User::load($uid);
+        $eid = db_query("SELECT MAX(nid) FROM node WHERE type = :type", [":type" => "event"])->fetchField();
+        $string = user_register_url($account, $eid, 2);
+        $message['body'][] = $string;
+      }
+      else {
+        $message['send'] = FALSE;
+      }
     }
+  }
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function manage_event_form_user_login_form_alter(&$form,\Drupal\Core\Form\FormStateInterface $form_state) {
-    $form['#submit'][] = 'manage_event_user_login_submit';
+function manage_event_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
+  $form['#submit'][] = 'manage_event_user_login_submit';
 }
 
 /**
@@ -662,104 +651,106 @@ function manage_event_form_user_login_form_alter(&$form,\Drupal\Core\Form\FormSt
  *
  * Redirects the user to the dashboard after logging in.
  */
-function manage_event_user_login_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-    $form_state->setRedirect('<front>');
+function manage_event_user_login_submit(&$form, FormStateInterface $form_state) {
+  $form_state->setRedirect('<front>');
 }
 
-function manage_event_form_alter(&$form, $form_state,$form_id) {
-    if($form_id == "node_event_overview_delete_form")
-    {
-        $form['#title'] = "Event Cancelled";
-        $form['description']['#markup'] = '<b>The event has been successfully cancelled.</br></br>An automatically generated email is sent to all registrants to inform of the cancellation.</b></br>';
-        unset($form['actions']['submit']);
-        $form['actions']['cancel']['#title'] = "Click here to go back";
+/**
+ * Implements hook_form_alter().
+ */
+function manage_event_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == "node_event_overview_delete_form") {
+    $form['#title'] = "Event Cancelled";
+    $form['description']['#markup'] = '<b>The event has been successfully cancelled.</br></br>An automatically generated email is sent to all registrants to inform of the cancellation.</b></br>';
+    unset($form['actions']['submit']);
+    $form['actions']['cancel']['#title'] = "Click here to go back";
 
-        $node = \Drupal::routeMatch()->getParameter('node');
-        $node = $node->id();
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $node = $node->id();
 
-        $member_id = db_query("SELECT field_reference_member_target_id FROM node__field_reference_member WHERE entity_id = :id",array("id" => $node))->fetchField();
-        $general_id = db_query("SELECT field_reference_general_target_id FROM node__field_reference_general WHERE entity_id = :id",array("id" => $node))->fetchField();
+    $member_id = db_query("SELECT field_reference_member_target_id FROM node__field_reference_member WHERE entity_id = :id", ["id" => $node])->fetchField();
+    $general_id = db_query("SELECT field_reference_general_target_id FROM node__field_reference_general WHERE entity_id = :id", ["id" => $node])->fetchField();
 
-        if(is_numeric($member_id))
-        {
-            Node::load($member_id)
-                ->setPublished(FALSE)
-                ->save();
+    if (is_numeric($member_id)) {
+      Node::load($member_id)
+        ->setPublished(FALSE)
+        ->save();
 
-            date_default_timezone_set('Australia/Sydney');
-            $date = date('m/d/Y h:i:s a', time());
-            $date = strtotime($date);
+      date_default_timezone_set('Australia/Sydney');
+      $date = date('m/d/Y h:i:s a', time());
+      $date = strtotime($date);
 
-            $delete_email = db_query("SELECT field_reference_delete_target_id FROM node__field_reference_delete WHERE entity_id = :id", array(":id" => $node))->fetchField();
-            Node::load($delete_email)
-                ->setPublished(TRUE)
-                ->save();
+      $delete_email = db_query("SELECT field_reference_delete_target_id FROM node__field_reference_delete WHERE entity_id = :id", [":id" => $node])->fetchField();
+      Node::load($delete_email)
+        ->setPublished(TRUE)
+        ->save();
 
-            $rule_id = db_query('SELECT field_delete_rule_id_value FROM node__field_delete_rule_id WHERE entity_id = :id',array(":id" => $member_id))->fetchField();
-            $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", array(":rule_id" => $rule_id))->fetchField();
-            Rule::load($rule_id)
-                ->setIsActive(TRUE)
-                ->save();
+      $rule_id = db_query('SELECT field_delete_rule_id_value FROM node__field_delete_rule_id WHERE entity_id = :id', [":id" => $member_id])->fetchField();
+      $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", [":rule_id" => $rule_id])->fetchField();
+      Rule::load($rule_id)
+        ->setIsActive(TRUE)
+        ->save();
 
-            $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-            while(!is_numeric($scheduler))
-                $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-            \Drupal\rng\Entity\RuleSchedule::load($scheduler)
-                ->setDate($date)
-                ->save();
-            \Drupal::service('cron')->run();
-            $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-            while(is_numeric($scheduler))
-                $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-        }
-
-        if(is_numeric($general_id))
-        {
-            Node::load($general_id)
-                ->setPublished(FALSE)
-                ->save();
-
-            date_default_timezone_set('Australia/Sydney');
-            $date = date('m/d/Y h:i:s a', time());
-            $date = strtotime($date);
-
-            $delete_email = db_query("SELECT field_reference_delete_target_id FROM node__field_reference_delete WHERE entity_id = :id", array(":id" => $node))->fetchField();
-            Node::load($delete_email)
-                ->setPublished(TRUE)
-                ->save();
-
-            $rule_id = db_query('SELECT field_delete_rule_id_value FROM node__field_delete_rule_id WHERE entity_id = :id',array(":id" => $general_id))->fetchField();
-            $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", array(":rule_id" => $rule_id))->fetchField();
-            Rule::load($rule_id)
-                ->setIsActive(TRUE)
-                ->save();
-
-            $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-            while(!is_numeric($scheduler))
-                $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-            \Drupal\rng\Entity\RuleSchedule::load($scheduler)
-                ->setDate($date)
-                ->save();
-            \Drupal::service('cron')->run();
-            $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-            while(is_numeric($scheduler))
-                $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", array(":component" => $component))->fetchField();
-        }
-
-        $title = db_query("SELECT title FROM node_field_data WHERE nid = :id", array(":id" => $node))->fetchField();
-        if(!is_numeric(strpos($title,"(CANCELLED)")))
-        {
-            $title .= " (CANCELLED)";
-            Node::load($node)
-                ->setTitle($title)
-                ->save();
-        }
-
-        $node = Node::load($node);
-        if($node->isPublished() == TRUE)
-        {
-          $node->setPublished(FALSE);
-          $node->save();
-        }
+      $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      while (!is_numeric($scheduler)) {
+        $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      }
+      RuleSchedule::load($scheduler)
+        ->setDate($date)
+        ->save();
+      \Drupal::service('cron')->run();
+      $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      while (is_numeric($scheduler)) {
+        $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      }
     }
+
+    if (is_numeric($general_id)) {
+      Node::load($general_id)
+        ->setPublished(FALSE)
+        ->save();
+
+      date_default_timezone_set('Australia/Sydney');
+      $date = date('m/d/Y h:i:s a', time());
+      $date = strtotime($date);
+
+      $delete_email = db_query("SELECT field_reference_delete_target_id FROM node__field_reference_delete WHERE entity_id = :id", [":id" => $node])->fetchField();
+      Node::load($delete_email)
+        ->setPublished(TRUE)
+        ->save();
+
+      $rule_id = db_query('SELECT field_delete_rule_id_value FROM node__field_delete_rule_id WHERE entity_id = :id', [":id" => $general_id])->fetchField();
+      $component = db_query("SELECT id FROM rng_rule_component WHERE rule = :rule_id AND action = 'rng_rule_scheduler'", [":rule_id" => $rule_id])->fetchField();
+      Rule::load($rule_id)
+        ->setIsActive(TRUE)
+        ->save();
+
+      $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      while (!is_numeric($scheduler)) {
+        $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      }
+      RuleSchedule::load($scheduler)
+        ->setDate($date)
+        ->save();
+      \Drupal::service('cron')->run();
+      $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      while (is_numeric($scheduler)) {
+        $scheduler = db_query("SELECT id FROM rng_rule_scheduler WHERE component = :component", [":component" => $component])->fetchField();
+      }
+    }
+
+    $title = db_query("SELECT title FROM node_field_data WHERE nid = :id", [":id" => $node])->fetchField();
+    if (!is_numeric(strpos($title, "(CANCELLED)"))) {
+      $title .= " (CANCELLED)";
+      Node::load($node)
+        ->setTitle($title)
+        ->save();
+    }
+
+    $node = Node::load($node);
+    if ($node->isPublished() == TRUE) {
+      $node->setPublished(FALSE);
+      $node->save();
+    }
+  }
 }

@@ -4,7 +4,3 @@ description: 'Provides features to manage event.'
 package: Custom
 core: 8.x
 package: Custom
-dependencies:
-  - rng (>= 8.x-1.0)
-  - userprofiles
-  - assetmanage

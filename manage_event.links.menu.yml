@@ -10,38 +10,3 @@ content_entity_manage_event.admin.structure.settings:
   description: 'Configure Event entity'
   route_name:  manage_event.event_settings
   parent: system.admin_structure
-
-create_event:
-  title: 'Create Event'
-  route_name: manage_event.create_event
-  parent: main
-  menu_name: main
-  weight: -10
-
-event_overview_calendar:
-  title: 'Calendar Overview'
-  route_name: manage_event.calendarMonth
-  parent: main
-  menu_name: main
-  expanded: TRUE
-  weight: -8
-
-event_overview_calendarMonth:
-  title: 'Calendar Overview'
-  route_name: manage_event.calendarMonth
-  parent: event_overview_calendar
-  menu_name: main
-  expanded: TRUE
-  weight: -10
-
-manage_event_mf_calendarMonth:
-  title: 'Members & Friends only'
-  route_name: manage_event.mf.calendarMonth
-  parent: event_overview_calendar
-  menu_name: main
-
-manage_event_gp_calendarMonth:
-  title: 'General Public only'
-  route_name: manage_event.gp.calendarMonth
-  parent: event_overview_calendar
-  menu_name: main
