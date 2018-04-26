@@ -1,6 +1,6 @@
 # manage_event
 
-Asset_manage is part of the service clubs package.
+manage_event is part of the service clubs package.
 The project base can be found at https://github.com/didymo/service_clubs_package.
 
 The manage_event module handles the creation, editing, and deletion
@@ -13,15 +13,13 @@ start and end date/time for the organisers and workers separately from the
 start and end date/time of the general public. These events can then be edited
 or deleted should any needs or changes arise.
 
-This module is especially useful, as it can be used as a tool for
-easy event planning, but also provides the event information in a
+This module can assist with event planning and management, but also provides the event information in a
 clean formatted layout that is easily viewable for both organisers
 and the general public. 
 
 This means it can be used as a method of also
 advertising the event, instead of the planner then being forced to publish
-the exact same information on a separate website, like most existing tools
-do today. For those who want to organise a public event but don't have the
+the exact same information on a separate website. For those who want to organise a public event but don't have the
 resources to maintain their own site for the event can use this module to 
 accomplish this.
 
@@ -44,24 +42,9 @@ notification about event cancellation, allowing them to easily act accordingly.
 * assetmanage
 * userprofiles
 
-#INSTALLATION
-Refer to INSTALL.txt.
-
-#CONFIGURATION
-The module has no menu or modifiable settings. There is no
-configuration. 
-
-If disabled, the site will no longer be able to provide the
-creation of new events, or the editing and deletion of existing
-ones. The automated emailing system will also no longer be available.
-
-#FAQ
-Frequenctly asked questions in the issue queue
-
 #MAINTAINERS
 Current maintainers:
 * Tahlya M. Maling
 
 This project is thanks to:
 * Didymo Designs
-* Illawarra RSL
