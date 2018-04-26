@@ -1,6 +1,7 @@
 # manage_event
 
 manage_event is part of the service clubs package.
+The code base can be found at https://github.com/didymo/manage_event
 
 The manage_event module handles the creation, editing, and deletion
 of events. By using this module, you can create public events, such as
